@@ -390,7 +390,7 @@ namespace LinqToLdap.Tests.PerformanceTests
             };
             var objectClasses = objectClassesDictionary.Values.ToArray();
             var watch = Stopwatch.StartNew();
-            for (int i = 0; i < int.Parse("100,000", NumberStyles.AllowThousands); i++)
+            for (int i = 0; i < 100_000; i++)
             {
                 foreach (var objectClass in objectClasses)
                 {
