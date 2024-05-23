@@ -11,7 +11,7 @@ Below you'll find the fastest way to get up and running with LINQ to LDAP.  Ther
 #### Get LINQ to LDAP
 Add LINQ to LDAP to your project by getting it from [NuGet](http://nuget.org/List/Packages/linqtoldap).
 #### Create a class
-```
+```csharp
 public class User
 {
     public const string NamingContext = "CN=Users,CN=Employees,DC=Northwind,DC=local";
@@ -34,7 +34,7 @@ public class User
 ```
 #### Map the class
 By Attributes
-```
+```csharp
 [DirectorySchema(NamingContext, ObjectCategory = "Person", ObjectClass = "User")]
 public class User
 {
@@ -74,7 +74,7 @@ public class User
 }
 ```
 By Mapping
-```
+```csharp
 public class UserMapping : ClassMap<User>
 {
     public override IClassMap PerformMapping(string namingContext = null, 
@@ -102,7 +102,7 @@ public class UserMapping : ClassMap<User>
 ```
 #### Configure LINQ to LDAP
 Put this in your Startup.cs, Global.asax.cs or App.xaml.cs
-```
+```csharp
 var config = new LdapConfiguration()
     .MaxPageSizeIs(1000);
 
@@ -123,7 +123,7 @@ config.ConfigureFactory("companydirectory.com")
 config.UseStaticStorage();
 ```
 #### Create a DirectoryContext
-```
+```csharp
 //this only works when using static storage
 IDirectoryContext context = new DirectoryContext();
 
@@ -131,7 +131,7 @@ IDirectoryContext context = new DirectoryContext();
 IDirectoryContext context = new DirectoryContext(config);
 ```
 #### CRUD for User
-```
+```csharp
 IDirectoryContext context = new DirectoryContext();
 
 var user = new User()
@@ -154,7 +154,7 @@ context.Update(user);
 context.Delete(user.DistinguishedName);
 ```
 #### CRUD without mapping
-```
+```csharp
 IDirectoryContext context = new DirectoryContext();
 
 IDirectoryAttributes user = new DirectoryAttributes("CN=ABC User,CN=Users,CN=Employees,DC=Northwind,DC=local");
@@ -187,7 +187,7 @@ LDAP currently does **NOT** support transactions so there is no way to wrap modi
 ## Unit Testing
 DirectoryContext is mocking friendly via the IDirectoryContext interface.  Its methods can be mocked, however, when using LINQ to LDAP specific expressions in queries (custom filters) it will be necessary to use the MockQuery under TestSupport.
 
-```
+```csharp
 var array = new[]() { "one" };
 var context = new Mock<IDirectoryContext>();
 var query = new MockQuery<IDirectoryAttributes>(new List<object> { array });
