@@ -243,7 +243,7 @@ namespace LinqToLdap
         /// The server name can be an IP address, a DNS domain or host name.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        /// THrown if <paramref name="serverName"/> is null, empty or white-space.
+        /// Thrown if <paramref name="serverName"/> is null, empty or white-space.
         /// </exception>
         public ILdapConnectionFactoryConfiguration ConfigureFactory(string serverName)
         {
@@ -264,7 +264,7 @@ namespace LinqToLdap
         /// The server name can be an IP address, a DNS domain or host name.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        /// THrown if <paramref name="serverName"/> is null, empty or white-space.
+        /// Thrown if <paramref name="serverName"/> is null, empty or white-space.
         /// </exception>
         public IPooledConnectionFactoryConfiguration ConfigurePooledFactory(string serverName)
         {
