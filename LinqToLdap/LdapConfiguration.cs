@@ -245,10 +245,11 @@ namespace LinqToLdap
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="serverName"/> is null, empty or white-space.
         /// </exception>
+        /// <exception cref="InvalidOperationException"></exception>
         public ILdapConnectionFactoryConfiguration ConfigureFactory(string serverName)
         {
             if (ConnectionFactory != null)
-                throw new MappingException("A connection factory has already been configured.");
+                throw new InvalidOperationException("A connection factory has already been configured.");
 
             var factory = new LdapConnectionFactory(serverName) { Logger = Log };
 
@@ -266,10 +267,11 @@ namespace LinqToLdap
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="serverName"/> is null, empty or white-space.
         /// </exception>
+        /// <exception cref="InvalidOperationException"></exception>
         public IPooledConnectionFactoryConfiguration ConfigurePooledFactory(string serverName)
         {
             if (ConnectionFactory != null)
-                throw new MappingException("A connection factory has already been configured.");
+                throw new InvalidOperationException("A connection factory has already been configured.");
 
             var factory = new PooledLdapConnectionFactory(serverName) { Logger = Log };
 
@@ -284,10 +286,11 @@ namespace LinqToLdap
         /// <param name="customFactory">The factory.</param>
         /// <typeparam name="T">Type of the factory</typeparam>
         /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public T ConfigureCustomFactory<T>(T customFactory) where T : ILdapConnectionFactory
         {
             if (ConnectionFactory != null)
-                throw new MappingException("A connection factory has already been configured.");
+                throw new InvalidOperationException("A connection factory has already been configured.");
 
             ConnectionFactory = customFactory;
 
