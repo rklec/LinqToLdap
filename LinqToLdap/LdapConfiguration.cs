@@ -301,12 +301,12 @@ namespace LinqToLdap
         /// Sets <see cref="Configuration"/> for global configuration access.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="MappingException">Throw if this method is called more than once.</exception>
+        /// <exception cref="InvalidOperationException">Throw if this method is called more than once.</exception>
         public LdapConfiguration UseStaticStorage()
         {
             if (Configuration != null)
             {
-                throw new MappingException("Static storage has already been set.");
+                throw new InvalidOperationException("Static storage has already been set.");
             }
             Configuration = this;
 
