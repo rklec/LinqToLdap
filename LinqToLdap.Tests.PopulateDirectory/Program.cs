@@ -50,7 +50,7 @@ namespace LinqToLdap.Tests.PopulateDirectory
 
             PopulateDirectoryForTests();
 
-            PropulateDirectoryForInheritance();
+            PopulateDirectoryForInheritance();
 
             //allows setting passwords without SSL. Only tested for AD LDS
 
@@ -259,7 +259,7 @@ namespace LinqToLdap.Tests.PopulateDirectory
 
         #region PopluateDirectoryForTests Code
 
-        private static void PropulateDirectoryForInheritance()
+        private static void PopulateDirectoryForInheritance()
 
         {
             AddContainerIfNecessary("CN", "InheritanceTest");
