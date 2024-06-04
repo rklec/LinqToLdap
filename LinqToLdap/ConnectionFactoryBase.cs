@@ -41,7 +41,8 @@ namespace LinqToLdap
         /// <param name="serverName"></param>
         protected ConnectionFactoryBase(string serverName)
         {
-            if (serverName.IsNullOrEmpty()) throw new ArgumentNullException("serverName");
+            if (string.IsNullOrEmpty(serverName))
+                throw new ArgumentNullException(nameof(serverName));
 
             if (serverName.StartsWith("ldap://", StringComparison.OrdinalIgnoreCase))
             {
@@ -49,23 +50,23 @@ namespace LinqToLdap
 
                 var preServerInfo = serverName.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-                switch (preServerInfo.Length)
+                serverName = preServerInfo.Length switch
                 {
-                    case 1:
-                        serverName = preServerInfo[0];
-                        break;
-
-                    case 2:
-                        throw new ArgumentException(
-                            string.Format(
-                                "You cannot specify a directory container in the connection.  Use only \"{0}\" and then use DirectoryContext to query \"{1}\".",
-                                preServerInfo[0], preServerInfo[1]));
-                }
+                    1 => preServerInfo[0],
+                    2 => throw new ArgumentException(string.Format(
+                            "You cannot specify a directory container in the connection.  Use only \"{0}\" and then use DirectoryContext to query \"{1}\".",
+                            preServerInfo[0],
+                            preServerInfo[1]
+                        )
+                    ),
+                    _ => serverName
+                };
             }
 
             var serverInfo = serverName.Split(':');
 
             Port = DefaultPort;
+
             switch (serverInfo.Length)
             {
                 case 1:
@@ -73,40 +74,39 @@ namespace LinqToLdap
                     break;
 
                 case 2:
+                {
+                    if (int.TryParse(serverInfo[1], out var port))
                     {
-                        int port;
-                        if (int.TryParse(serverInfo[1], out port))
+                        ServerName = serverInfo[0];
+
+                        switch (port)
                         {
-                            ServerName = serverInfo[0];
-                            switch (port)
-                            {
-                                case DefaultPort:
-                                    break;
+                            case DefaultPort:
+                                break;
 
-                                case SslPort:
-                                    UsesSsl = true;
-                                    Port = port;
-                                    break;
+                            case SslPort:
+                                UsesSsl = true;
+                                Port = port;
+                                break;
 
-                                case GlobalCatalogPort:
-                                    Port = port;
-                                    break;
+                            case GlobalCatalogPort:
+                                Port = port;
+                                break;
 
-                                case GlobalCatalogSslPort:
-                                    UsesSsl = true;
-                                    Port = port;
-                                    break;
+                            case GlobalCatalogSslPort:
+                                UsesSsl = true;
+                                Port = port;
+                                break;
 
-                                default:
-                                    Port = port;
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            ServerName = serverName;
+                            default:
+                                Port = port;
+                                break;
                         }
                     }
+                    else
+                        ServerName = serverName;
+                }
+
                     break;
 
                 default:
@@ -124,11 +124,16 @@ namespace LinqToLdap
         /// <returns></returns>
         protected virtual LdapConnection BuildConnection()
         {
-            if (Logger != null && Logger.TraceEnabled) Logger.Trace("Building Connection");
+            if (Logger is { TraceEnabled: true })
+                Logger.Trace("Building Connection");
+
             try
             {
-                var identifier = new LdapDirectoryIdentifier(ServerName, Port,
-                FullyQualifiedDnsHostName, IsConnectionless);
+                var identifier = new LdapDirectoryIdentifier(ServerName,
+                    Port,
+                    FullyQualifiedDnsHostName,
+                    IsConnectionless
+                );
 
                 var connection = AuthType.HasValue
                     ? new LdapConnection(identifier, Credentials, AuthType.Value)
@@ -138,13 +143,14 @@ namespace LinqToLdap
                 connection.SessionOptions.SecureSocketLayer = UsesSsl;
                 connection.Timeout = Timeout;
 
-                if (Logger != null && Logger.TraceEnabled) Logger.Trace("Connection Built");
+                if (Logger is { TraceEnabled: true })
+                    Logger.Trace("Connection Built");
 
                 return connection;
             }
             catch (Exception ex)
             {
-                if (Logger != null) Logger.Error(ex);
+                Logger?.Error(ex);
 
                 throw;
             }
@@ -200,6 +206,6 @@ namespace LinqToLdap
         /// <summary>
         /// Gets or sets the logger.
         /// </summary>
-        public ILinqToLdapLogger Logger { get; set; }
+        public ILinqToLdapLogger? Logger { get; set; }
     }
 }
