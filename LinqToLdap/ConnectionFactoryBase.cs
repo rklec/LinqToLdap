@@ -41,7 +41,7 @@ namespace LinqToLdap
         /// <param name="serverName"></param>
         protected ConnectionFactoryBase(string serverName)
         {
-            if (serverName.IsNullOrEmpty()) throw new ArgumentNullException("serverName");
+            if (serverName.IsNullOrEmpty()) throw new ArgumentNullException(nameof(serverName));
 
             if (serverName.StartsWith("ldap://", StringComparison.OrdinalIgnoreCase))
             {
