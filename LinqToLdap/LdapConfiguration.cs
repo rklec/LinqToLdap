@@ -305,10 +305,8 @@ namespace LinqToLdap
         {
             Log = log;
 
-            if (ConnectionFactory is ConnectionFactoryBase)
-            {
-                (ConnectionFactory as ConnectionFactoryBase).Logger = Log;
-            }
+            if (ConnectionFactory is ConnectionFactoryBase connectionFactory)
+                connectionFactory.Logger = Log;
 
             return this;
         }
